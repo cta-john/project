@@ -1,0 +1,33 @@
+# 계정 정보 (보안)
+config/hts_info.json
+
+# 로그 파일
+logs/
+*.log
+
+# 데이터 파일
+data/
+*.csv
+*.xlsx
+backup/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 임시 파일
+*.tmp
+*.bak

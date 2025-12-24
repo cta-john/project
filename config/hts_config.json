@@ -1,0 +1,92 @@
+{
+  "Kiwoom": {
+    "name": "키움",
+    "실행경로": "C:\\KiwoomHero4\\bin\\nkstarter.exe",
+    "이미지폴더": "C:\\HTS_Automation\\images\\키움",
+    "HTS창이름": "영웅문",
+    "화면번호": ["0191"],
+    "증거금률": ["20", "30", "40", "50", "60", "100"],
+    "작업디렉토리": "C:\\Users\\kiwoom\\jupyter"
+  },
+  "KB": {
+    "name": "KB",
+    "실행경로": "C:\\KB증권\\hable\\hable.exe",
+    "이미지폴더": "C:\\HTS_Automation\\images\\KB",
+    "HTS창이름": "KB증권",
+    "화면번호": ["0191", "0942"],
+    "증거금률": ["20", "30", "40", "100"],
+    "작업디렉토리": "C:\\Users\\kiwoom\\Documents"
+  },
+  "Shinhan": {
+    "name": "신한",
+    "실행경로": "C:\\Shinhan\\SOLHTS\\alphastarter.exe",
+    "이미지폴더": "C:\\HTS_Automation\\images\\신한",
+    "HTS창이름": "신한SOL",
+    "화면번호": ["1806"],
+    "증거금률": ["30", "40", "50", "100"],
+    "작업디렉토리": "C:\\Users\\kiwoom\\Documents"
+  },
+  "Daishin": {
+    "name": "대신",
+    "실행경로": "C:\\DAISHIN\\STARTER\\ncStarter.exe",
+    "이미지폴더": "C:\\HTS_Automation\\images\\대신",
+    "HTS창이름": "대신증권",
+    "화면번호": ["7248"],
+    "증거금률": ["전체"],
+    "작업디렉토리": "C:\\Users\\kiwoom\\Documents"
+  },
+  "Samsung": {
+    "name": "삼성",
+    "실행경로": "C:\\삼성증권\\POPHTSN\\pophts.exe",
+    "이미지폴더": "C:\\HTS_Automation\\images\\삼성",
+    "HTS창이름": "POP HTS",
+    "화면번호": ["1503"],
+    "증거금률": ["20", "30", "40", "100"],
+    "작업디렉토리": "C:\\Users\\kiwoom\\Documents"
+  },
+  "Hankook": {
+    "name": "한투",
+    "실행경로": "C:\\eFriend Plus\\efriendplus\\efplusmain.exe",
+    "이미지폴더": "C:\\HTS_Automation\\images\\한투",
+    "HTS창이름": "eFriend Plus",
+    "화면번호": ["0411"],
+    "증거금률": ["20", "30", "40", "50", "100"],
+    "작업디렉토리": "C:\\Users\\kiwoom\\Documents"
+  },
+  "Hana": {
+    "name": "하나",
+    "실행경로": "C:\\1QHTS\\hfstarter.exe",
+    "이미지폴더": "C:\\HTS_Automation\\images\\하나",
+    "HTS창이름": "하나금융투자",
+    "화면번호": ["0191"],
+    "증거금률": ["20", "30", "40", "50", "60", "100"],
+    "작업디렉토리": "C:\\Users\\kiwoom\\Documents"
+  },
+  "Meritz": {
+    "name": "메리츠",
+    "실행경로": "C:\\메리츠증권\\iMERITZ XII\\Main\\imeritz.exe",
+    "이미지폴더": "C:\\HTS_Automation\\images\\메리츠",
+    "HTS창이름": "메리츠종합금융",
+    "화면번호": ["0191"],
+    "증거금률": ["20", "30", "40", "50", "60", "100"],
+    "작업디렉토리": "C:\\Users\\kiwoom\\Documents"
+  },
+  "Mirae": {
+    "name": "미래",
+    "실행경로": "C:\\미래에셋증권\\카이로스\\kairos.exe",
+    "이미지폴더": "C:\\HTS_Automation\\images\\미래",
+    "HTS창이름": "mPOP",
+    "화면번호": ["0431"],
+    "증거금률": ["20", "30", "40", "50", "60", "100"],
+    "작업디렉토리": "C:\\Users\\kiwoom\\Documents"
+  },
+  "NH": {
+    "name": "NH",
+    "실행경로": "C:\\WMV\\QV\\wmtslogin.exe",
+    "이미지폴더": "C:\\HTS_Automation\\images\\NH",
+    "HTS창이름": "나무",
+    "화면번호": ["0191", "0942"],
+    "증거금률": ["20", "30", "40", "50", "60", "100"],
+    "작업디렉토리": "C:\\Users\\kiwoom\\Documents"
+  }
+}
