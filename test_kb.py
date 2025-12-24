@@ -61,8 +61,59 @@ def test_kb_automation():
         logger.info(f"HTS 실행 완료 (PID: {proc.pid})")
         time.sleep(5)
 
-        # 2단계: 로그인 대기 (조회전용안내 팝업 대기)
-        logger.info("2단계: 조회전용안내 팝업 대기...")
+        # 2단계: 로그인 화면 대기
+        logger.info("2단계: 로그인 화면 대기...")
+        # 로그인 창이 뜰 때까지 대기 (hts_logo나 특정 요소)
+        time.sleep(3)
+
+        # 3단계: 아이디 탭 클릭
+        logger.info("3단계: 아이디 탭 클릭")
+        id_tab = os.path.join(kb_config['이미지폴더'], "아이디_탭.png")
+
+        if click_at_image(id_tab, timeout=10, logger=logger):
+            logger.info("아이디 탭 클릭 성공")
+        else:
+            logger.warning("아이디 탭 이미지를 찾지 못함 - 좌표로 시도")
+            # 임시 좌표 (오른쪽 상단 아이디 탭)
+            pyautogui.click(936, 75)
+
+        time.sleep(1)
+
+        # 4단계: ID 입력
+        logger.info("4단계: ID 입력")
+        # ID 입력창 클릭 (대략적인 위치)
+        pyautogui.click(837, 173)
+        time.sleep(0.5)
+
+        # ID 입력
+        enter_text_fast(kb_account['id'])
+        logger.info(f"ID 입력 완료")
+        time.sleep(0.5)
+
+        # 5단계: PW 입력
+        logger.info("5단계: PW 입력")
+        pyautogui.press('tab')  # 비밀번호 입력창으로 이동
+        time.sleep(0.3)
+
+        # PW 입력
+        enter_text_fast(kb_account['password'])
+        logger.info("PW 입력 완료")
+        time.sleep(0.5)
+
+        # 6단계: 로그인 버튼 클릭
+        logger.info("6단계: 로그인 버튼 클릭")
+        login_button = os.path.join(kb_config['이미지폴더'], "로그인_버튼.png")
+
+        if click_at_image(login_button, timeout=5, logger=logger):
+            logger.info("로그인 버튼 클릭 성공")
+        else:
+            logger.warning("로그인 버튼 이미지를 찾지 못함 - Enter 시도")
+            pyautogui.press('enter')
+
+        time.sleep(2)
+
+        # 7단계: 조회전용안내 팝업 대기
+        logger.info("7단계: 조회전용안내 팝업 대기...")
         popup_img = os.path.join(kb_config['이미지폴더'], "조회전용안내.png")
 
         if wait_for_image(popup_img, timeout=30, logger=logger):
@@ -83,8 +134,8 @@ def test_kb_automation():
             save_error_screenshot("KB_로그인실패")
             return False
 
-        # 3단계: 메인 화면 진입 확인
-        logger.info("3단계: 메인 화면 진입 확인...")
+        # 8단계: 메인 화면 진입 확인
+        logger.info("8단계: 메인 화면 진입 확인...")
         logo_img = os.path.join(kb_config['이미지폴더'], "hts_logo.png")
 
         if wait_for_image(logo_img, timeout=20, logger=logger):
@@ -96,8 +147,8 @@ def test_kb_automation():
 
         time.sleep(2)
 
-        # 4단계: 화면번호 0191 입력
-        logger.info("4단계: 화면번호 0191 입력")
+        # 9단계: 화면번호 0191 입력
+        logger.info("9단계: 화면번호 0191 입력")
 
         # 화면번호 입력창 클릭 (좌측 상단 - 좌표는 임시, 이미지 인식으로 변경 가능)
         # 임시로 좌표 사용 (나중에 이미지로 대체)
@@ -112,8 +163,8 @@ def test_kb_automation():
 
         time.sleep(3)
 
-        # 5단계: 전체받기 버튼 클릭
-        logger.info("5단계: 전체받기 버튼 클릭")
+        # 10단계: 전체받기 버튼 클릭
+        logger.info("10단계: 전체받기 버튼 클릭")
         download_button = os.path.join(kb_config['이미지폴더'], "전체받기_버튼.png")
 
         if click_at_image(download_button, timeout=10, logger=logger):
@@ -123,12 +174,12 @@ def test_kb_automation():
             save_error_screenshot("KB_전체받기실패")
             return False
 
-        # 6단계: 데이터 로딩 대기 (다음 버튼 비활성화 확인)
-        logger.info("6단계: 데이터 로딩 대기 (10초)...")
+        # 11단계: 데이터 로딩 대기 (다음 버튼 비활성화 확인)
+        logger.info("11단계: 데이터 로딩 대기 (10초)...")
         time.sleep(10)  # 실제로는 다음 버튼 비활성화 이미지 확인
 
-        # 7단계: 테이블 우클릭 및 파일 저장
-        logger.info("7단계: 테이블 우클릭 및 파일 저장")
+        # 12단계: 테이블 우클릭 및 파일 저장
+        logger.info("12단계: 테이블 우클릭 및 파일 저장")
 
         # 테이블 중앙 클릭 (대략적인 위치)
         table_x, table_y = 300, 300  # 임시 좌표
@@ -159,8 +210,8 @@ def test_kb_automation():
 
         time.sleep(2)
 
-        # 8단계: 파일 저장 대화상자
-        logger.info("8단계: 파일 저장 경로 및 파일명 입력")
+        # 13단계: 파일 저장 대화상자
+        logger.info("13단계: 파일 저장 경로 및 파일명 입력")
 
         # 파일명 생성
         today = datetime.now()
@@ -181,7 +232,7 @@ def test_kb_automation():
 
         time.sleep(2)
 
-        # 9단계: 파일 저장 확인
+        # 14단계: 파일 저장 확인
         if os.path.exists(save_path):
             file_size = os.path.getsize(save_path)
             logger.info(f"✅ 파일 저장 성공: {save_path} ({file_size} bytes)")
