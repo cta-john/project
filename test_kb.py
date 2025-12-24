@@ -14,6 +14,7 @@ from hts_utils import (
     setup_logging,
     load_config,
     load_account_info,
+    imglocation,
     wait_for_image,
     click_at_image,
     press_keyboard,
@@ -66,18 +67,48 @@ def test_kb_automation():
         # 로그인 창이 뜰 때까지 대기 (hts_logo나 특정 요소)
         time.sleep(3)
 
-        # 3단계: 아이디 탭 클릭
-        logger.info("3단계: 아이디 탭 클릭")
-        id_tab = os.path.join(kb_config['이미지폴더'], "아이디_탭.png")
+        # 3단계: 아이디 탭 확인 및 클릭
+        logger.info("3단계: 아이디 탭 확인 및 클릭")
 
-        if click_at_image(id_tab, timeout=10, logger=logger):
-            logger.info("아이디 탭 클릭 성공")
+        # 아이디 탭이 이미 활성화되어 있는지 확인
+        id_tab_active = os.path.join(kb_config['이미지폴더'], "아이디_탭_활성화.png")
+        id_tab_inactive = os.path.join(kb_config['이미지폴더'], "아이디_탭_비활성화.png")
+
+        # 활성화 상태 확인
+        if imglocation(id_tab_active, confidence=0.7):
+            logger.info("아이디 탭이 이미 활성화되어 있음 - 스킵")
+        elif imglocation(id_tab_inactive, confidence=0.7):
+            logger.info("아이디 탭이 비활성화되어 있음 - 클릭 시도")
+            if click_at_image(id_tab_inactive, timeout=5, logger=logger):
+                logger.info("아이디 탭 클릭 성공")
+            else:
+                logger.warning("아이디 탭 클릭 실패 - 좌표로 시도")
+                pyautogui.click(936, 75)
         else:
-            logger.warning("아이디 탭 이미지를 찾지 못함 - 좌표로 시도")
-            # 임시 좌표 (오른쪽 상단 아이디 탭)
+            logger.warning("아이디 탭을 찾지 못함 - 좌표로 시도")
             pyautogui.click(936, 75)
 
         time.sleep(1)
+
+        # 3-1단계: 조회전용 체크박스 확인 및 체크
+        logger.info("3-1단계: 조회전용 체크박스 확인")
+
+        # 체크 상태 확인
+        check_checked = os.path.join(kb_config['이미지폴더'], "조회전용_체크됨.png")
+        check_unchecked = os.path.join(kb_config['이미지폴더'], "조회전용_체크안됨.png")
+
+        if imglocation(check_checked, confidence=0.8):
+            logger.info("조회전용 체크박스가 이미 체크되어 있음 - 스킵")
+        elif imglocation(check_unchecked, confidence=0.8):
+            logger.info("조회전용 체크박스가 체크 안 됨 - 체크 시도")
+            if click_at_image(check_unchecked, timeout=5, logger=logger):
+                logger.info("조회전용 체크박스 체크 성공")
+            else:
+                logger.warning("조회전용 체크박스를 찾지 못함")
+        else:
+            logger.warning("조회전용 체크박스 이미지를 찾지 못함")
+
+        time.sleep(0.5)
 
         # 4단계: ID 입력
         logger.info("4단계: ID 입력")
