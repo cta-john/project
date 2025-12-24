@@ -71,22 +71,24 @@ def test_kb_automation():
         logger.info("3단계: 아이디 탭 확인 및 클릭")
 
         # 아이디 탭이 이미 활성화되어 있는지 확인
-        id_tab_active = os.path.join(kb_config['이미지폴더'], "아이디_탭_활성화.png")
-        id_tab_inactive = os.path.join(kb_config['이미지폴더'], "아이디_탭_비활성화.png")
+        id_tab_active = os.path.join(kb_config['이미지폴더'], "id_tab_active.png")
+        id_tab_inactive = os.path.join(kb_config['이미지폴더'], "id_tab_inactive.png")
 
-        # 활성화 상태 확인
-        if imglocation(id_tab_active, confidence=0.7):
-            logger.info("아이디 탭이 이미 활성화되어 있음 - 스킵")
-        elif imglocation(id_tab_inactive, confidence=0.7):
+        # 활성화 상태 확인 (confidence 낮춤)
+        if imglocation(id_tab_active, confidence=0.5):
+            logger.info("✅ 아이디 탭이 이미 활성화되어 있음")
+        elif imglocation(id_tab_inactive, confidence=0.5):
             logger.info("아이디 탭이 비활성화되어 있음 - 클릭 시도")
-            if click_at_image(id_tab_inactive, timeout=5, logger=logger):
-                logger.info("아이디 탭 클릭 성공")
+            if click_at_image(id_tab_inactive, timeout=5, confidence=0.5, logger=logger):
+                logger.info("✅ 아이디 탭 클릭 성공")
             else:
-                logger.warning("아이디 탭 클릭 실패 - 좌표로 시도")
-                pyautogui.click(936, 75)
+                logger.error("❌ 아이디 탭 클릭 실패")
+                save_error_screenshot("KB_아이디탭클릭실패")
+                return False
         else:
-            logger.warning("아이디 탭을 찾지 못함 - 좌표로 시도")
-            pyautogui.click(936, 75)
+            logger.error("❌ 아이디 탭 이미지를 찾지 못함")
+            save_error_screenshot("KB_아이디탭이미지없음")
+            return False
 
         time.sleep(1)
 
@@ -94,19 +96,19 @@ def test_kb_automation():
         logger.info("3-1단계: 조회전용 체크박스 확인")
 
         # 체크 상태 확인
-        check_checked = os.path.join(kb_config['이미지폴더'], "조회전용_체크됨.png")
-        check_unchecked = os.path.join(kb_config['이미지폴더'], "조회전용_체크안됨.png")
+        check_checked = os.path.join(kb_config['이미지폴더'], "readonly_checked.png")
+        check_unchecked = os.path.join(kb_config['이미지폴더'], "readonly_unchecked.png")
 
-        if imglocation(check_checked, confidence=0.8):
-            logger.info("조회전용 체크박스가 이미 체크되어 있음 - 스킵")
-        elif imglocation(check_unchecked, confidence=0.8):
+        if imglocation(check_checked, confidence=0.5):
+            logger.info("✅ 조회전용 체크박스가 이미 체크되어 있음")
+        elif imglocation(check_unchecked, confidence=0.5):
             logger.info("조회전용 체크박스가 체크 안 됨 - 체크 시도")
-            if click_at_image(check_unchecked, timeout=5, logger=logger):
-                logger.info("조회전용 체크박스 체크 성공")
+            if click_at_image(check_unchecked, timeout=5, confidence=0.5, logger=logger):
+                logger.info("✅ 조회전용 체크박스 체크 성공")
             else:
-                logger.warning("조회전용 체크박스를 찾지 못함")
+                logger.warning("조회전용 체크박스 클릭 실패 - 계속 진행")
         else:
-            logger.warning("조회전용 체크박스 이미지를 찾지 못함")
+            logger.warning("조회전용 체크박스 이미지를 찾지 못함 - 계속 진행")
 
         time.sleep(0.5)
 
@@ -133,10 +135,10 @@ def test_kb_automation():
 
         # 6단계: 로그인 버튼 클릭
         logger.info("6단계: 로그인 버튼 클릭")
-        login_button = os.path.join(kb_config['이미지폴더'], "로그인_버튼.png")
+        login_button = os.path.join(kb_config['이미지폴더'], "login_button.png")
 
-        if click_at_image(login_button, timeout=5, logger=logger):
-            logger.info("로그인 버튼 클릭 성공")
+        if click_at_image(login_button, timeout=5, confidence=0.5, logger=logger):
+            logger.info("✅ 로그인 버튼 클릭 성공")
         else:
             logger.warning("로그인 버튼 이미지를 찾지 못함 - Enter 시도")
             pyautogui.press('enter')
@@ -145,23 +147,23 @@ def test_kb_automation():
 
         # 7단계: 조회전용안내 팝업 대기
         logger.info("7단계: 조회전용안내 팝업 대기...")
-        popup_img = os.path.join(kb_config['이미지폴더'], "조회전용안내.png")
+        popup_img = os.path.join(kb_config['이미지폴더'], "readonly_notice.png")
 
-        if wait_for_image(popup_img, timeout=30, logger=logger):
-            logger.info("조회전용안내 팝업 발견!")
+        if wait_for_image(popup_img, timeout=30, confidence=0.5, logger=logger):
+            logger.info("✅ 조회전용안내 팝업 발견!")
             time.sleep(1)
 
             # 예(Y) 버튼 클릭
-            yes_button = os.path.join(kb_config['이미지폴더'], "예_버튼.png")
-            if click_at_image(yes_button, timeout=5, logger=logger):
-                logger.info("예(Y) 버튼 클릭 성공")
+            yes_button = os.path.join(kb_config['이미지폴더'], "yes_button.png")
+            if click_at_image(yes_button, timeout=5, confidence=0.5, logger=logger):
+                logger.info("✅ 예(Y) 버튼 클릭 성공")
             else:
                 logger.warning("예(Y) 버튼을 찾지 못함 - Enter 키 시도")
                 pyautogui.press('enter')
 
             time.sleep(2)
         else:
-            logger.error("조회전용안내 팝업을 찾지 못했습니다!")
+            logger.error("❌ 조회전용안내 팝업을 찾지 못했습니다!")
             save_error_screenshot("KB_로그인실패")
             return False
 
@@ -169,7 +171,7 @@ def test_kb_automation():
         logger.info("8단계: 메인 화면 진입 확인...")
         logo_img = os.path.join(kb_config['이미지폴더'], "hts_logo.png")
 
-        if wait_for_image(logo_img, timeout=20, logger=logger):
+        if wait_for_image(logo_img, timeout=20, confidence=0.5, logger=logger):
             logger.info("메인 화면 진입 확인!")
         else:
             logger.error("메인 화면 진입 실패!")
@@ -196,12 +198,12 @@ def test_kb_automation():
 
         # 10단계: 전체받기 버튼 클릭
         logger.info("10단계: 전체받기 버튼 클릭")
-        download_button = os.path.join(kb_config['이미지폴더'], "전체받기_버튼.png")
+        download_button = os.path.join(kb_config['이미지폴더'], "download_all_button.png")
 
-        if click_at_image(download_button, timeout=10, logger=logger):
-            logger.info("전체받기 버튼 클릭 성공")
+        if click_at_image(download_button, timeout=10, confidence=0.5, logger=logger):
+            logger.info("✅ 전체받기 버튼 클릭 성공")
         else:
-            logger.error("전체받기 버튼을 찾지 못했습니다!")
+            logger.error("❌ 전체받기 버튼을 찾지 못했습니다!")
             save_error_screenshot("KB_전체받기실패")
             return False
 
