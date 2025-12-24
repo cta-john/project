@@ -114,14 +114,22 @@ def test_kb_automation():
 
         # 4단계: ID 입력
         logger.info("4단계: ID 입력")
-        # ID 입력창 클릭 (대략적인 위치)
-        pyautogui.click(837, 173)
-        time.sleep(0.5)
 
-        # ID 입력
-        enter_text_fast(kb_account['id'])
-        logger.info(f"ID 입력 완료")
-        time.sleep(0.5)
+        # ID 입력창 이미지로 찾아서 클릭 (모니터 환경 독립적)
+        id_input_field = os.path.join(kb_config['이미지폴더'], "id_input_field.png")
+
+        if click_at_image(id_input_field, timeout=5, confidence=0.5, logger=logger):
+            logger.info("✅ ID 입력창 클릭 성공")
+            time.sleep(0.5)
+
+            # ID 입력
+            enter_text_fast(kb_account['id'])
+            logger.info(f"ID 입력 완료")
+            time.sleep(0.5)
+        else:
+            logger.error("❌ ID 입력창을 찾지 못했습니다!")
+            save_error_screenshot("KB_ID입력창찾기실패")
+            return False
 
         # 5단계: PW 입력
         logger.info("5단계: PW 입력")
@@ -183,18 +191,24 @@ def test_kb_automation():
         # 9단계: 화면번호 0191 입력
         logger.info("9단계: 화면번호 0191 입력")
 
-        # 화면번호 입력창 클릭 (좌측 상단 - 좌표는 임시, 이미지 인식으로 변경 가능)
-        # 임시로 좌표 사용 (나중에 이미지로 대체)
-        pyautogui.click(60, 47)  # 대략적인 위치
-        time.sleep(0.5)
+        # 화면번호 입력창 이미지로 찾아서 클릭 (모니터 환경 독립적)
+        screen_number_field = os.path.join(kb_config['이미지폴더'], "screen_number_field.png")
 
-        # 0191 입력
-        enter_text_fast("0191")
-        time.sleep(0.3)
-        pyautogui.press('enter')
-        logger.info("0191 입력 완료")
+        if click_at_image(screen_number_field, timeout=5, confidence=0.5, logger=logger):
+            logger.info("✅ 화면번호 입력창 클릭 성공")
+            time.sleep(0.5)
 
-        time.sleep(3)
+            # 0191 입력
+            enter_text_fast("0191")
+            time.sleep(0.3)
+            pyautogui.press('enter')
+            logger.info("0191 입력 완료")
+
+            time.sleep(3)
+        else:
+            logger.error("❌ 화면번호 입력창을 찾지 못했습니다!")
+            save_error_screenshot("KB_화면번호입력창찾기실패")
+            return False
 
         # 10단계: 전체받기 버튼 클릭
         logger.info("10단계: 전체받기 버튼 클릭")
@@ -214,15 +228,26 @@ def test_kb_automation():
         # 12단계: 테이블 우클릭 및 파일 저장
         logger.info("12단계: 테이블 우클릭 및 파일 저장")
 
-        # 테이블 중앙 클릭 (대략적인 위치)
-        table_x, table_y = 300, 300  # 임시 좌표
-        pyautogui.click(table_x, table_y)
-        time.sleep(0.5)
+        # 테이블 영역 이미지로 찾아서 우클릭 (모니터 환경 독립적)
+        table_area = os.path.join(kb_config['이미지폴더'], "table_area.png")
 
-        # 우클릭
-        pyautogui.rightClick(table_x, table_y)
-        logger.info("테이블 우클릭 완료")
-        time.sleep(1)
+        table_pos = imglocation(table_area, confidence=0.5)
+        if table_pos:
+            logger.info(f"✅ 테이블 영역 발견: {table_pos}")
+            table_x, table_y = table_pos
+
+            # 테이블 클릭
+            pyautogui.click(table_x, table_y)
+            time.sleep(0.5)
+
+            # 우클릭
+            pyautogui.rightClick(table_x, table_y)
+            logger.info("테이블 우클릭 완료")
+            time.sleep(1)
+        else:
+            logger.error("❌ 테이블 영역을 찾지 못했습니다!")
+            save_error_screenshot("KB_테이블영역찾기실패")
+            return False
 
         # 파일로 내보내기 메뉴로 이동
         logger.info("파일로 내보내기 선택 중...")
@@ -290,8 +315,8 @@ if __name__ == "__main__":
     print()
     print("주의사항:")
     print("1. 테스트 중 마우스/키보드를 사용하지 마세요")
-    print("2. 화면 해상도를 변경하지 마세요")
-    print("3. 로그는 C:\\HTS_Automation\\logs에 저장됩니다")
+    print("2. 로그는 C:\\HTS_Automation\\logs에 저장됩니다")
+    print("3. 이미지 기반 인식으로 모니터 환경 변경 시에도 작동합니다")
     print()
 
     input("준비되면 Enter 키를 누르세요...")
