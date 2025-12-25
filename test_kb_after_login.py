@@ -97,9 +97,9 @@ def test_kb_download():
             return False
 
         # 10단계: 데이터 로딩 대기
-        print("\n[10단계] 데이터 로딩 대기 중... (10초)")
-        logger.info("10단계: 데이터 로딩 대기 (10초)...")
-        time.sleep(10)
+        print("\n[10단계] 데이터 로딩 대기 중... (7초)")
+        logger.info("10단계: 데이터 로딩 대기 (7초)...")
+        time.sleep(7)
         print("✅ 데이터 로딩 대기 완료")
 
         # 11단계: 테이블 우클릭 및 파일 저장
@@ -129,21 +129,50 @@ def test_kb_download():
             save_error_screenshot("KB_테이블영역찾기실패")
             return False
 
-        # 12단계: CSV 파일로 내보내기
-        print("\n[12단계] CSV 파일로 내보내기 중...")
-        logger.info("파일로 내보내기 선택 중...")
+        # 12단계: 우클릭 메뉴에서 "파일로 내보내기" 선택
+        print("\n[12단계] 우클릭 메뉴에서 '파일로 내보내기' 선택 중...")
+        logger.info("12단계: 파일로 내보내기 메뉴 선택")
+
+        # 우클릭 메뉴 확인 (선택 사항 - 이미지 있으면 확인)
+        context_menu = os.path.join(kb_config['이미지폴더'], "context_menu_export.png")
+
+        # 메뉴가 뜨는 시간 대기
+        time.sleep(0.5)
+
+        # 이미지로 메뉴 확인 (있으면)
+        if os.path.exists(context_menu):
+            if wait_for_image(context_menu, timeout=3, confidence=0.5, logger=logger):
+                logger.info("✅ 우클릭 메뉴 확인됨")
+                print("✅ 우클릭 메뉴 확인됨")
+            else:
+                logger.warning("⚠️  우클릭 메뉴 이미지를 찾지 못함 - 계속 진행")
+                print("⚠️  우클릭 메뉴 이미지를 찾지 못함 - 계속 진행")
 
         # 키보드로 메뉴 이동
-        for _ in range(3):  # 다이렉트 보기까지 3번 아래
+        for _ in range(3):  # "파일로 내보내기"까지 이동
             pyautogui.press('down')
             time.sleep(0.1)
 
-        # 파일로 내보내기 선택 (우측 화살표)
+        # 우측 화살표로 서브메뉴 열기
         pyautogui.press('right')
-        time.sleep(0.3)
+        logger.info("파일로 내보내기 서브메뉴 열기")
+        print("✅ 파일로 내보내기 선택")
+        time.sleep(0.5)
 
-        # CSV 내보내기 선택
-        pyautogui.press('down')  # 첫 번째 항목
+        # 13단계: CSV 내보내기 선택
+        print("\n[13단계] CSV 내보내기 선택 중...")
+        logger.info("13단계: CSV 내보내기 선택")
+
+        # CSV 메뉴 확인 (선택 사항 - 이미지 있으면 확인)
+        csv_menu = os.path.join(kb_config['이미지폴더'], "csv_export_option.png")
+
+        if os.path.exists(csv_menu):
+            if wait_for_image(csv_menu, timeout=3, confidence=0.5, logger=logger):
+                logger.info("✅ CSV 메뉴 확인됨")
+                print("✅ CSV 메뉴 확인됨")
+
+        # CSV 선택
+        pyautogui.press('down')  # 첫 번째 항목으로 이동
         time.sleep(0.1)
         pyautogui.press('enter')
         logger.info("CSV 내보내기 선택 완료")
@@ -151,9 +180,28 @@ def test_kb_download():
 
         time.sleep(2)
 
-        # 13단계: 파일 저장
-        print("\n[13단계] 파일 저장 중...")
-        logger.info("13단계: 파일 저장 경로 및 파일명 입력")
+        # 14단계: 파일 저장 다이얼로그 확인
+        print("\n[14단계] 파일 저장 다이얼로그 확인 중...")
+        logger.info("14단계: 파일 저장 다이얼로그 대기")
+
+        # 저장 다이얼로그 확인 (선택 사항 - 이미지 있으면 확인)
+        save_dialog = os.path.join(kb_config['이미지폴더'], "save_dialog.png")
+
+        if os.path.exists(save_dialog):
+            if wait_for_image(save_dialog, timeout=5, confidence=0.5, logger=logger):
+                logger.info("✅ 파일 저장 다이얼로그 확인됨")
+                print("✅ 파일 저장 다이얼로그 확인됨")
+            else:
+                logger.warning("⚠️  저장 다이얼로그 이미지를 찾지 못함 - 계속 진행")
+                print("⚠️  저장 다이얼로그 이미지를 찾지 못함 - 계속 진행")
+        else:
+            # 이미지 없으면 그냥 대기
+            time.sleep(1)
+            print("✅ 파일 저장 다이얼로그 대기 완료 (이미지 확인 생략)")
+
+        # 15단계: 파일 저장
+        print("\n[15단계] 파일 저장 중...")
+        logger.info("15단계: 파일 저장 경로 및 파일명 입력")
 
         # 파일명 생성
         today = datetime.now()
@@ -185,7 +233,7 @@ def test_kb_download():
             return True
         else:
             logger.error(f"❌ 파일 저장 실패: {save_path}")
-            print(f"❌ [13단계 실패] 파일 저장 실패: {save_path}")
+            print(f"❌ [15단계 실패] 파일 저장 실패: {save_path}")
             save_error_screenshot("KB_파일저장실패")
             return False
 
@@ -199,7 +247,7 @@ def test_kb_download():
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("KB증권 데이터 다운로드 테스트 (8단계~13단계)")
+    print("KB증권 데이터 다운로드 테스트 (8단계~15단계)")
     print("=" * 60)
     print()
     print("⚠️  사전 조건:")
@@ -209,10 +257,12 @@ if __name__ == "__main__":
     print("테스트 범위:")
     print("  [8단계] 화면번호 0191 입력")
     print("  [9단계] 전체받기 버튼 클릭")
-    print("  [10단계] 데이터 로딩 대기")
+    print("  [10단계] 데이터 로딩 대기 (7초)")
     print("  [11단계] 테이블 우클릭")
-    print("  [12단계] CSV 파일로 내보내기")
-    print("  [13단계] 파일 저장 및 확인")
+    print("  [12단계] 우클릭 메뉴에서 '파일로 내보내기' 선택")
+    print("  [13단계] CSV 내보내기 선택")
+    print("  [14단계] 파일 저장 다이얼로그 확인")
+    print("  [15단계] 파일 저장 및 확인")
     print()
     print("주의사항:")
     print("1. 테스트 중 마우스/키보드를 사용하지 마세요")
