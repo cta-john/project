@@ -181,13 +181,21 @@ def test_kb_automation():
         logo_img = os.path.join(kb_config['이미지폴더'], "hts_logo.png")
 
         if wait_for_image(logo_img, timeout=20, confidence=0.5, logger=logger):
-            logger.info("메인 화면 진입 확인!")
+            logger.info("✅✅✅ 메인 화면 진입 성공!")
+            logger.info("=" * 50)
+            logger.info("로그인 테스트 완료!")
+            logger.info("=" * 50)
+            return True
         else:
-            logger.error("메인 화면 진입 실패!")
+            logger.error("❌ 메인 화면 진입 실패!")
             save_error_screenshot("KB_메인화면실패")
             return False
 
-        time.sleep(2)
+        """
+        ===================================================================
+        아래는 로그인 후 데이터 다운로드 단계입니다 (현재 비활성화)
+        로그인 테스트가 성공한 후 활성화할 예정입니다.
+        ===================================================================
 
         # 9단계: 화면번호 0191 입력
         logger.info("9단계: 화면번호 0191 입력")
@@ -300,6 +308,7 @@ def test_kb_automation():
             logger.error(f"❌ 파일 저장 실패: {save_path}")
             save_error_screenshot("KB_파일저장실패")
             return False
+        """
 
     except Exception as e:
         logger.error(f"오류 발생: {e}")
@@ -350,8 +359,17 @@ if __name__ == "__main__":
     run_as_admin()
 
     print("=" * 60)
-    print("KB증권 자동화 테스트")
+    print("KB증권 로그인 테스트 (1단계~8단계)")
     print("=" * 60)
+    print()
+    print("테스트 범위:")
+    print("✅ HTS 실행")
+    print("✅ 아이디 탭 확인 및 클릭")
+    print("✅ 조회전용 체크박스 확인")
+    print("✅ ID/PW 입력")
+    print("✅ 로그인 버튼 클릭")
+    print("✅ 조회전용안내 팝업 처리")
+    print("✅ 메인 화면 진입 확인")
     print()
     print("주의사항:")
     print("1. 테스트 중 마우스/키보드를 사용하지 마세요")
@@ -366,7 +384,8 @@ if __name__ == "__main__":
     print()
     print("=" * 60)
     if success:
-        print("✅ 테스트 성공!")
+        print("✅✅✅ 로그인 테스트 성공!")
+        print("메인 화면까지 정상 진입되었습니다.")
     else:
-        print("❌ 테스트 실패! 로그를 확인하세요.")
+        print("❌ 로그인 테스트 실패! 로그를 확인하세요.")
     print("=" * 60)
