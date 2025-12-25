@@ -242,50 +242,39 @@ def test_kb_automation():
         print("\n[12단계] 우클릭 메뉴에서 '파일로 내보내기' 선택 중...")
         logger.info("12단계: 파일로 내보내기 메뉴 선택")
 
-        # 우클릭 메뉴 확인 (선택 사항 - 이미지 있으면 확인)
-        context_menu = os.path.join(kb_config['이미지폴더'], "context_menu_export.png")
+        # 우클릭 메뉴가 뜨는 시간 충분히 대기
+        time.sleep(1.5)
 
-        # 메뉴가 뜨는 시간 대기
-        time.sleep(0.5)
-
-        # 이미지로 메뉴 확인 (있으면)
-        if os.path.exists(context_menu):
-            if wait_for_image(context_menu, timeout=3, confidence=0.5, logger=logger):
-                logger.info("✅ 우클릭 메뉴 확인됨")
-                print("✅ 우클릭 메뉴 확인됨")
-            else:
-                logger.warning("⚠️  우클릭 메뉴 이미지를 찾지 못함 - 계속 진행")
-                print("⚠️  우클릭 메뉴 이미지를 찾지 못함 - 계속 진행")
-
-        # 키보드로 메뉴 이동
-        for _ in range(3):  # "파일로 내보내기"까지 이동
+        # 키보드로 메뉴 이동 (9번째 = "파일로 내보내기")
+        print("  → 9번째 메뉴로 이동 중... (down 키 9번)")
+        for i in range(9):
             pyautogui.press('down')
-            time.sleep(0.1)
+            logger.info(f"  down 키 {i+1}번째")
+            time.sleep(0.15)
 
         # 우측 화살표로 서브메뉴 열기
+        time.sleep(0.3)
         pyautogui.press('right')
-        logger.info("파일로 내보내기 서브메뉴 열기")
-        print("✅ 파일로 내보내기 선택")
+        logger.info("파일로 내보내기 서브메뉴 열기 (right 키)")
+        print("✅ 파일로 내보내기 서브메뉴 열림")
         time.sleep(0.5)
 
         # 13단계: CSV 내보내기 선택
-        print("\n[13단계] CSV 내보내기 선택 중...")
-        logger.info("13단계: CSV 내보내기 선택")
+        print("\n[13단계] CSV로 저장 선택 중...")
+        logger.info("13단계: CSV로 저장 선택")
 
-        # CSV 메뉴 확인 (선택 사항 - 이미지 있으면 확인)
-        csv_menu = os.path.join(kb_config['이미지폴더'], "csv_export_option.png")
+        # 서브메뉴에서 4번째 = "CSV로 저장"
+        print("  → 4번째 메뉴로 이동 중... (down 키 4번)")
+        for i in range(4):
+            pyautogui.press('down')
+            logger.info(f"  서브메뉴 down 키 {i+1}번째")
+            time.sleep(0.15)
 
-        if os.path.exists(csv_menu):
-            if wait_for_image(csv_menu, timeout=3, confidence=0.5, logger=logger):
-                logger.info("✅ CSV 메뉴 확인됨")
-                print("✅ CSV 메뉴 확인됨")
-
-        # CSV 선택
-        pyautogui.press('down')  # 첫 번째 항목으로 이동
-        time.sleep(0.1)
+        # CSV로 저장 실행
+        time.sleep(0.3)
         pyautogui.press('enter')
-        logger.info("CSV 내보내기 선택 완료")
-        print("✅ CSV 내보내기 선택 완료")
+        logger.info("CSV로 저장 선택 완료")
+        print("✅ CSV로 저장 선택 완료")
 
         time.sleep(2)
 
