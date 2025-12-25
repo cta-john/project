@@ -156,29 +156,19 @@ def test_kb_automation():
         logo_img = os.path.join(kb_config['이미지폴더'], "hts_logo.png")
 
         if wait_for_image(logo_img, timeout=20, confidence=0.5, logger=logger):
-            logger.info("✅✅✅ 메인 화면 진입 성공!")
-            logger.info("=" * 50)
-            logger.info("로그인 테스트 완료!")
-            logger.info("=" * 50)
-            print("\n✅✅✅ 메인 화면 진입 성공!")
-            print("=" * 60)
-            print("로그인 테스트 완료!")
-            print("=" * 60)
-            return True
+            logger.info("✅ 메인 화면 진입 성공!")
+            print("✅ 메인 화면 진입 성공!")
         else:
             logger.error("❌ 메인 화면 진입 실패!")
             print("❌ [7단계 실패] 메인 화면 진입 실패!")
             save_error_screenshot("KB_메인화면실패")
             return False
 
-        """
-        ===================================================================
-        아래는 로그인 후 데이터 다운로드 단계입니다 (현재 비활성화)
-        로그인 테스트가 성공한 후 활성화할 예정입니다.
-        ===================================================================
+        time.sleep(2)
 
-        # 9단계: 화면번호 0191 입력
-        logger.info("9단계: 화면번호 0191 입력")
+        # 8단계: 화면번호 0191 입력
+        print("\n[8단계] 화면번호 0191 입력 중...")
+        logger.info("8단계: 화면번호 0191 입력")
 
         # 화면번호 입력창 이미지로 찾아서 클릭 (모니터 환경 독립적)
         screen_number_field = os.path.join(kb_config['이미지폴더'], "screen_number_field.png")
@@ -192,30 +182,38 @@ def test_kb_automation():
             time.sleep(0.3)
             pyautogui.press('enter')
             logger.info("0191 입력 완료")
+            print("✅ 화면번호 0191 입력 완료")
 
             time.sleep(3)
         else:
             logger.error("❌ 화면번호 입력창을 찾지 못했습니다!")
+            print("❌ [8단계 실패] 화면번호 입력창을 찾지 못했습니다!")
             save_error_screenshot("KB_화면번호입력창찾기실패")
             return False
 
-        # 10단계: 전체받기 버튼 클릭
-        logger.info("10단계: 전체받기 버튼 클릭")
+        # 9단계: 전체받기 버튼 클릭
+        print("\n[9단계] 전체받기 버튼 클릭 중...")
+        logger.info("9단계: 전체받기 버튼 클릭")
         download_button = os.path.join(kb_config['이미지폴더'], "download_all_button.png")
 
         if click_at_image(download_button, timeout=10, confidence=0.5, logger=logger):
             logger.info("✅ 전체받기 버튼 클릭 성공")
+            print("✅ 전체받기 버튼 클릭 완료")
         else:
             logger.error("❌ 전체받기 버튼을 찾지 못했습니다!")
+            print("❌ [9단계 실패] 전체받기 버튼을 찾지 못했습니다!")
             save_error_screenshot("KB_전체받기실패")
             return False
 
-        # 11단계: 데이터 로딩 대기 (다음 버튼 비활성화 확인)
-        logger.info("11단계: 데이터 로딩 대기 (10초)...")
-        time.sleep(10)  # 실제로는 다음 버튼 비활성화 이미지 확인
+        # 10단계: 데이터 로딩 대기
+        print("\n[10단계] 데이터 로딩 대기 중... (10초)")
+        logger.info("10단계: 데이터 로딩 대기 (10초)...")
+        time.sleep(10)
+        print("✅ 데이터 로딩 대기 완료")
 
-        # 12단계: 테이블 우클릭 및 파일 저장
-        logger.info("12단계: 테이블 우클릭 및 파일 저장")
+        # 11단계: 테이블 우클릭 및 파일 저장
+        print("\n[11단계] 테이블 우클릭 중...")
+        logger.info("11단계: 테이블 우클릭 및 파일 저장")
 
         # 테이블 영역 이미지로 찾아서 우클릭 (모니터 환경 독립적)
         table_area = os.path.join(kb_config['이미지폴더'], "table_area.png")
@@ -232,13 +230,16 @@ def test_kb_automation():
             # 우클릭
             pyautogui.rightClick(table_x, table_y)
             logger.info("테이블 우클릭 완료")
+            print("✅ 테이블 우클릭 완료")
             time.sleep(1)
         else:
             logger.error("❌ 테이블 영역을 찾지 못했습니다!")
+            print("❌ [11단계 실패] 테이블 영역을 찾지 못했습니다!")
             save_error_screenshot("KB_테이블영역찾기실패")
             return False
 
-        # 파일로 내보내기 메뉴로 이동
+        # 12단계: CSV 파일로 내보내기
+        print("\n[12단계] CSV 파일로 내보내기 중...")
         logger.info("파일로 내보내기 선택 중...")
         # 키보드로 메뉴 이동 (더 안정적)
         for _ in range(3):  # 다이렉트 보기까지 3번 아래
@@ -254,10 +255,12 @@ def test_kb_automation():
         time.sleep(0.1)
         pyautogui.press('enter')
         logger.info("CSV 내보내기 선택 완료")
+        print("✅ CSV 내보내기 선택 완료")
 
         time.sleep(2)
 
-        # 13단계: 파일 저장 대화상자
+        # 13단계: 파일 저장
+        print("\n[13단계] 파일 저장 중...")
         logger.info("13단계: 파일 저장 경로 및 파일명 입력")
 
         # 파일명 생성
@@ -275,20 +278,24 @@ def test_kb_automation():
 
         # 저장 버튼 클릭
         pyautogui.press('enter')
-        logger.info("파일 저장 완료!")
+        logger.info("파일 저장 명령 완료")
 
         time.sleep(2)
 
-        # 14단계: 파일 저장 확인
+        # 파일 저장 확인
         if os.path.exists(save_path):
             file_size = os.path.getsize(save_path)
             logger.info(f"✅ 파일 저장 성공: {save_path} ({file_size} bytes)")
+            print(f"✅ 파일 저장 성공: {filename} ({file_size} bytes)")
+            print("\n" + "=" * 60)
+            print("✅✅✅ 전체 자동화 테스트 완료!")
+            print("=" * 60)
             return True
         else:
             logger.error(f"❌ 파일 저장 실패: {save_path}")
+            print(f"❌ [13단계 실패] 파일 저장 실패: {save_path}")
             save_error_screenshot("KB_파일저장실패")
             return False
-        """
 
     except Exception as e:
         logger.error(f"오류 발생: {e}")
@@ -339,7 +346,7 @@ if __name__ == "__main__":
     run_as_admin()
 
     print("=" * 60)
-    print("KB증권 로그인 테스트 (1단계~7단계)")
+    print("KB증권 전체 자동화 테스트 (1단계~13단계)")
     print("=" * 60)
     print()
     print("테스트 범위:")
@@ -350,6 +357,12 @@ if __name__ == "__main__":
     print("  [5단계] 로그인 버튼 클릭")
     print("  [6단계] 조회전용안내 팝업 처리")
     print("  [7단계] 메인 화면 진입 확인")
+    print("  [8단계] 화면번호 0191 입력")
+    print("  [9단계] 전체받기 버튼 클릭")
+    print("  [10단계] 데이터 로딩 대기")
+    print("  [11단계] 테이블 우클릭")
+    print("  [12단계] CSV 파일로 내보내기")
+    print("  [13단계] 파일 저장 및 확인")
     print()
     print("⚠️  사전 준비:")
     print("  - HTS 기본 세팅: 아이디 탭 활성화")
@@ -368,8 +381,8 @@ if __name__ == "__main__":
     print()
     print("=" * 60)
     if success:
-        print("✅✅✅ 로그인 테스트 성공!")
-        print("메인 화면까지 정상 진입되었습니다.")
+        print("✅✅✅ 전체 자동화 테스트 성공!")
+        print("CSV 파일 다운로드까지 정상 완료되었습니다.")
     else:
-        print("❌ 로그인 테스트 실패! 로그를 확인하세요.")
+        print("❌ 자동화 테스트 실패! 로그를 확인하세요.")
     print("=" * 60)
