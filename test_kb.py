@@ -40,6 +40,7 @@ def test_kb_automation():
 
     try:
         # 설정 파일 로드
+        print("\n[준비] 설정 파일 로드 중...")
         logger.info("설정 파일 로드 중...")
         config = load_config()
         account_info = load_account_info()
@@ -56,45 +57,24 @@ def test_kb_automation():
         logger.info(f"저장 폴더: {save_dir}")
 
         # 1단계: HTS 실행
+        print("\n[1단계] KB HTS 실행 중...")
         logger.info("1단계: KB HTS 실행")
         minimize_all_windows()
 
         proc = Popen([kb_config['실행경로']], stdin=PIPE)
         logger.info(f"HTS 실행 완료 (PID: {proc.pid})")
+        print(f"✅ HTS 실행 완료 (PID: {proc.pid})")
         time.sleep(5)
 
         # 2단계: 로그인 화면 대기
+        print("\n[2단계] 로그인 화면 대기 중...")
         logger.info("2단계: 로그인 화면 대기...")
-        # 로그인 창이 뜰 때까지 대기 (hts_logo나 특정 요소)
         time.sleep(3)
+        print("✅ 로그인 화면 대기 완료")
 
-        # 3단계: 아이디 탭 확인 및 클릭
-        logger.info("3단계: 아이디 탭 확인 및 클릭")
-
-        # 아이디 탭이 이미 활성화되어 있는지 확인
-        id_tab_active = os.path.join(kb_config['이미지폴더'], "id_tab_active.png")
-        id_tab_inactive = os.path.join(kb_config['이미지폴더'], "id_tab_inactive.png")
-
-        # 활성화 상태 확인 (confidence 낮춤)
-        if imglocation(id_tab_active, confidence=0.5):
-            logger.info("✅ 아이디 탭이 이미 활성화되어 있음")
-        elif imglocation(id_tab_inactive, confidence=0.5):
-            logger.info("아이디 탭이 비활성화되어 있음 - 클릭 시도")
-            if click_at_image(id_tab_inactive, timeout=5, confidence=0.5, logger=logger):
-                logger.info("✅ 아이디 탭 클릭 성공")
-            else:
-                logger.error("❌ 아이디 탭 클릭 실패")
-                save_error_screenshot("KB_아이디탭클릭실패")
-                return False
-        else:
-            logger.error("❌ 아이디 탭 이미지를 찾지 못함")
-            save_error_screenshot("KB_아이디탭이미지없음")
-            return False
-
-        time.sleep(1)
-
-        # 4단계: ID 입력
-        logger.info("4단계: ID 입력")
+        # 3단계: ID 입력
+        print("\n[3단계] ID 입력 중...")
+        logger.info("3단계: ID 입력")
 
         # ID 입력창 이미지로 찾아서 클릭 (모니터 환경 독립적)
         id_input_field = os.path.join(kb_config['이미지폴더'], "id_input_field.png")
@@ -106,14 +86,17 @@ def test_kb_automation():
             # ID 입력
             enter_text_fast(kb_account['id'])
             logger.info(f"ID 입력 완료")
+            print(f"✅ ID 입력 완료")
             time.sleep(0.5)
         else:
             logger.error("❌ ID 입력창을 찾지 못했습니다!")
+            print("❌ [3단계 실패] ID 입력창을 찾지 못했습니다!")
             save_error_screenshot("KB_ID입력창찾기실패")
             return False
 
-        # 5단계: PW 입력
-        logger.info("5단계: PW 입력")
+        # 4단계: PW 입력
+        print("\n[4단계] PW 입력 중...")
+        logger.info("4단계: PW 입력")
 
         # Tab 키로 비밀번호 입력창으로 이동
         pyautogui.press('tab')
@@ -122,44 +105,54 @@ def test_kb_automation():
         # PW 입력
         enter_text_fast(kb_account['password'])
         logger.info("✅ PW 입력 완료 (Tab 키 사용)")
+        print("✅ PW 입력 완료")
         time.sleep(0.5)
 
-        # 6단계: 로그인 버튼 클릭
-        logger.info("6단계: 로그인 버튼 클릭")
+        # 5단계: 로그인 버튼 클릭
+        print("\n[5단계] 로그인 버튼 클릭 중...")
+        logger.info("5단계: 로그인 버튼 클릭")
         login_button = os.path.join(kb_config['이미지폴더'], "login_button.png")
 
         if click_at_image(login_button, timeout=5, confidence=0.5, logger=logger):
             logger.info("✅ 로그인 버튼 클릭 성공")
+            print("✅ 로그인 버튼 클릭 완료")
         else:
             logger.warning("로그인 버튼 이미지를 찾지 못함 - Enter 시도")
+            print("⚠️  로그인 버튼 이미지를 찾지 못함 - Enter 키로 시도")
             pyautogui.press('enter')
 
         time.sleep(2)
 
-        # 7단계: 조회전용안내 팝업 대기
-        logger.info("7단계: 조회전용안내 팝업 대기...")
+        # 6단계: 조회전용안내 팝업 대기
+        print("\n[6단계] 조회전용안내 팝업 대기 중...")
+        logger.info("6단계: 조회전용안내 팝업 대기...")
         popup_img = os.path.join(kb_config['이미지폴더'], "readonly_notice.png")
 
         if wait_for_image(popup_img, timeout=30, confidence=0.5, logger=logger):
             logger.info("✅ 조회전용안내 팝업 발견!")
+            print("✅ 조회전용안내 팝업 발견")
             time.sleep(1)
 
             # 예(Y) 버튼 클릭
             yes_button = os.path.join(kb_config['이미지폴더'], "yes_button.png")
             if click_at_image(yes_button, timeout=5, confidence=0.5, logger=logger):
                 logger.info("✅ 예(Y) 버튼 클릭 성공")
+                print("✅ 예(Y) 버튼 클릭 완료")
             else:
                 logger.warning("예(Y) 버튼을 찾지 못함 - Enter 키 시도")
+                print("⚠️  예(Y) 버튼을 찾지 못함 - Enter 키로 시도")
                 pyautogui.press('enter')
 
             time.sleep(2)
         else:
             logger.error("❌ 조회전용안내 팝업을 찾지 못했습니다!")
+            print("❌ [6단계 실패] 조회전용안내 팝업을 찾지 못했습니다!")
             save_error_screenshot("KB_로그인실패")
             return False
 
-        # 8단계: 메인 화면 진입 확인
-        logger.info("8단계: 메인 화면 진입 확인...")
+        # 7단계: 메인 화면 진입 확인
+        print("\n[7단계] 메인 화면 진입 확인 중...")
+        logger.info("7단계: 메인 화면 진입 확인...")
         logo_img = os.path.join(kb_config['이미지폴더'], "hts_logo.png")
 
         if wait_for_image(logo_img, timeout=20, confidence=0.5, logger=logger):
@@ -167,9 +160,14 @@ def test_kb_automation():
             logger.info("=" * 50)
             logger.info("로그인 테스트 완료!")
             logger.info("=" * 50)
+            print("\n✅✅✅ 메인 화면 진입 성공!")
+            print("=" * 60)
+            print("로그인 테스트 완료!")
+            print("=" * 60)
             return True
         else:
             logger.error("❌ 메인 화면 진입 실패!")
+            print("❌ [7단계 실패] 메인 화면 진입 실패!")
             save_error_screenshot("KB_메인화면실패")
             return False
 
@@ -341,18 +339,21 @@ if __name__ == "__main__":
     run_as_admin()
 
     print("=" * 60)
-    print("KB증권 로그인 테스트 (1단계~8단계)")
+    print("KB증권 로그인 테스트 (1단계~7단계)")
     print("=" * 60)
     print()
     print("테스트 범위:")
-    print("✅ HTS 실행")
-    print("✅ 아이디 탭 확인 및 클릭")
-    print("✅ ID/PW 입력")
-    print("✅ 로그인 버튼 클릭")
-    print("✅ 조회전용안내 팝업 처리")
-    print("✅ 메인 화면 진입 확인")
+    print("  [1단계] HTS 실행")
+    print("  [2단계] 로그인 화면 대기")
+    print("  [3단계] ID 입력")
+    print("  [4단계] PW 입력")
+    print("  [5단계] 로그인 버튼 클릭")
+    print("  [6단계] 조회전용안내 팝업 처리")
+    print("  [7단계] 메인 화면 진입 확인")
     print()
-    print("⚠️  주의: HTS 기본 세팅을 조회전용으로 설정해주세요")
+    print("⚠️  사전 준비:")
+    print("  - HTS 기본 세팅: 아이디 탭 활성화")
+    print("  - HTS 기본 세팅: 조회전용 체크")
     print()
     print("주의사항:")
     print("1. 테스트 중 마우스/키보드를 사용하지 마세요")
