@@ -93,15 +93,6 @@ def test_kb_automation():
 
         time.sleep(1)
 
-        # 3-1단계: 조회전용 체크박스 확인 및 체크 (임시로 비활성화)
-        logger.info("3-1단계: 조회전용 체크박스 - 스킵")
-        logger.warning("⚠️  조회전용 체크박스 단계 건너뜀 (수동으로 체크 필요)")
-
-        # 체크박스 인식 문제로 임시 비활성화
-        # TODO: 체크박스 이미지 재캡처 또는 confidence 조정 필요
-
-        time.sleep(0.5)
-
         # 4단계: ID 입력
         logger.info("4단계: ID 입력")
 
@@ -356,11 +347,12 @@ if __name__ == "__main__":
     print("테스트 범위:")
     print("✅ HTS 실행")
     print("✅ 아이디 탭 확인 및 클릭")
-    print("✅ 조회전용 체크박스 확인")
     print("✅ ID/PW 입력")
     print("✅ 로그인 버튼 클릭")
     print("✅ 조회전용안내 팝업 처리")
     print("✅ 메인 화면 진입 확인")
+    print()
+    print("⚠️  주의: HTS 기본 세팅을 조회전용으로 설정해주세요")
     print()
     print("주의사항:")
     print("1. 테스트 중 마우스/키보드를 사용하지 마세요")
