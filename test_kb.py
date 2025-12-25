@@ -93,23 +93,12 @@ def test_kb_automation():
 
         time.sleep(1)
 
-        # 3-1단계: 조회전용 체크박스 확인 및 체크
-        logger.info("3-1단계: 조회전용 체크박스 확인")
+        # 3-1단계: 조회전용 체크박스 확인 및 체크 (임시로 비활성화)
+        logger.info("3-1단계: 조회전용 체크박스 - 스킵")
+        logger.warning("⚠️  조회전용 체크박스 단계 건너뜀 (수동으로 체크 필요)")
 
-        # 체크 상태 확인
-        check_checked = os.path.join(kb_config['이미지폴더'], "readonly_checked.png")
-        check_unchecked = os.path.join(kb_config['이미지폴더'], "readonly_unchecked.png")
-
-        if imglocation(check_checked, confidence=0.5):
-            logger.info("✅ 조회전용 체크박스가 이미 체크되어 있음")
-        elif imglocation(check_unchecked, confidence=0.5):
-            logger.info("조회전용 체크박스가 체크 안 됨 - 체크 시도")
-            if click_at_image(check_unchecked, timeout=5, confidence=0.5, logger=logger):
-                logger.info("✅ 조회전용 체크박스 체크 성공")
-            else:
-                logger.warning("조회전용 체크박스 클릭 실패 - 계속 진행")
-        else:
-            logger.warning("조회전용 체크박스 이미지를 찾지 못함 - 계속 진행")
+        # 체크박스 인식 문제로 임시 비활성화
+        # TODO: 체크박스 이미지 재캡처 또는 confidence 조정 필요
 
         time.sleep(0.5)
 
