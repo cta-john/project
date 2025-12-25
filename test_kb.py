@@ -5,6 +5,7 @@ KB증권 자동화 테스트 스크립트
 import os
 import sys
 import time
+import ctypes
 from datetime import datetime
 from subprocess import Popen, PIPE
 
@@ -308,7 +309,46 @@ def test_kb_automation():
         return False
 
 
+def is_admin():
+    """관리자 권한으로 실행 중인지 확인"""
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
+
+
+def run_as_admin():
+    """관리자 권한으로 스크립트 재실행"""
+    try:
+        if not is_admin():
+            print("⚠️  관리자 권한이 필요합니다. 관리자 모드로 재실행합니다...")
+            print()
+
+            # UAC 프롬프트를 통해 관리자 권한으로 재실행
+            script_path = os.path.abspath(sys.argv[0])
+
+            ctypes.windll.shell32.ShellExecuteW(
+                None,
+                "runas",
+                sys.executable,
+                f'"{script_path}"',
+                None,
+                1  # SW_SHOWNORMAL
+            )
+            sys.exit(0)
+        else:
+            print("✅ 관리자 권한으로 실행 중")
+            print()
+    except Exception as e:
+        print(f"❌ 관리자 권한 승격 실패: {e}")
+        print("PowerShell을 관리자 모드로 실행한 후 다시 시도하세요.")
+        sys.exit(1)
+
+
 if __name__ == "__main__":
+    # 관리자 권한 확인 및 자동 승격 (가장 먼저 실행)
+    run_as_admin()
+
     print("=" * 60)
     print("KB증권 자동화 테스트")
     print("=" * 60)
