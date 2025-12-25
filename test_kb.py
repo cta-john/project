@@ -134,13 +134,25 @@ def test_kb_automation():
 
         # 5단계: PW 입력
         logger.info("5단계: PW 입력")
-        pyautogui.press('tab')  # 비밀번호 입력창으로 이동
-        time.sleep(0.3)
 
-        # PW 입력
-        enter_text_fast(kb_account['password'])
-        logger.info("PW 입력 완료")
-        time.sleep(0.5)
+        # 비밀번호 입력창 이미지로 찾아서 클릭 (모니터 환경 독립적)
+        pw_input_field = os.path.join(kb_config['이미지폴더'], "pw_input_field.png")
+
+        if click_at_image(pw_input_field, timeout=5, confidence=0.5, logger=logger):
+            logger.info("✅ PW 입력창 클릭 성공")
+            time.sleep(0.5)
+
+            # PW 입력
+            enter_text_fast(kb_account['password'])
+            logger.info("PW 입력 완료")
+            time.sleep(0.5)
+        else:
+            logger.warning("⚠️  PW 입력창 이미지를 찾지 못함 - Tab 키로 시도")
+            pyautogui.press('tab')
+            time.sleep(0.3)
+            enter_text_fast(kb_account['password'])
+            logger.info("PW 입력 완료 (Tab 키 사용)")
+            time.sleep(0.5)
 
         # 6단계: 로그인 버튼 클릭
         logger.info("6단계: 로그인 버튼 클릭")
