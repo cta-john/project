@@ -133,11 +133,11 @@ def test_kb_download():
         print("\n[12단계] 우클릭 메뉴에서 '파일로 내보내기' 선택 중...")
         logger.info("12단계: 파일로 내보내기 메뉴 선택")
 
+        # 우클릭 메뉴가 뜨는 시간 충분히 대기
+        time.sleep(1.5)
+
         # 우클릭 메뉴 확인 (선택 사항 - 이미지 있으면 확인)
         context_menu = os.path.join(kb_config['이미지폴더'], "context_menu_export.png")
-
-        # 메뉴가 뜨는 시간 대기
-        time.sleep(0.5)
 
         # 이미지로 메뉴 확인 (있으면)
         if os.path.exists(context_menu):
@@ -148,16 +148,19 @@ def test_kb_download():
                 logger.warning("⚠️  우클릭 메뉴 이미지를 찾지 못함 - 계속 진행")
                 print("⚠️  우클릭 메뉴 이미지를 찾지 못함 - 계속 진행")
 
-        # 키보드로 메뉴 이동
-        for _ in range(3):  # "파일로 내보내기"까지 이동
+        # 키보드로 메뉴 이동 (5번 down으로 변경 - 조정 가능)
+        print("  → 메뉴 항목으로 이동 중... (down 키 5번)")
+        for i in range(5):  # "파일로 내보내기"까지 이동 (횟수 조정 가능)
             pyautogui.press('down')
-            time.sleep(0.1)
+            logger.info(f"  down 키 {i+1}번째")
+            time.sleep(0.2)
 
         # 우측 화살표로 서브메뉴 열기
+        time.sleep(0.3)
         pyautogui.press('right')
-        logger.info("파일로 내보내기 서브메뉴 열기")
-        print("✅ 파일로 내보내기 선택")
-        time.sleep(0.5)
+        logger.info("파일로 내보내기 서브메뉴 열기 (right 키)")
+        print("✅ 파일로 내보내기 선택 (서브메뉴 열기)")
+        time.sleep(1)
 
         # 13단계: CSV 내보내기 선택
         print("\n[13단계] CSV 내보내기 선택 중...")
