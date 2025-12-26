@@ -175,16 +175,27 @@ def test_kb_automation():
 
         if click_at_image(screen_number_field, timeout=5, confidence=0.5, logger=logger):
             logger.info("✅ 화면번호 입력창 클릭 성공")
+            print("✅ 화면번호 입력창 클릭 성공")
+            time.sleep(1)  # 클릭 후 충분히 대기
+
+            # 기존 내용 지우기 (혹시 있을 수 있으니)
+            pyautogui.hotkey('ctrl', 'a')
+            time.sleep(0.2)
+
+            # 0191 입력 - pyperclip 사용 (더 안정적)
+            pyperclip.copy("0191")
+            time.sleep(0.3)
+            pyautogui.hotkey('ctrl', 'v')
+            logger.info("0191 붙여넣기 완료")
+            print("✅ 0191 붙여넣기 완료")
             time.sleep(0.5)
 
-            # 0191 입력
-            enter_text_fast("0191")
-            time.sleep(0.3)
+            # Enter 누르기
             pyautogui.press('enter')
-            logger.info("0191 입력 완료")
-            print("✅ 화면번호 0191 입력 완료")
+            logger.info("Enter 키 입력 완료")
+            print("✅ Enter 키 입력 완료")
 
-            time.sleep(3)
+            time.sleep(3)  # 화면 전환 대기
         else:
             logger.error("❌ 화면번호 입력창을 찾지 못했습니다!")
             print("❌ [8단계 실패] 화면번호 입력창을 찾지 못했습니다!")
