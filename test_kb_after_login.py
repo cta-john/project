@@ -47,39 +47,52 @@ def test_kb_download():
         print(f"✅ 저장 폴더: {save_dir}")
 
         # 8단계: 화면번호 0191 입력
-        print("\n[8단계] 화면번호 0191 입력 중...")
+        print("\n[8단계] 화면번호 0191 입력 시작")
         logger.info("8단계: 화면번호 0191 입력")
 
-        # 화면번호 입력창 이미지로 찾아서 클릭
+        # [중요] confidence를 0.9로 높여 오인식을 방지합니다.
         screen_number_field = os.path.join(kb_config['이미지폴더'], "screen_number_field.png")
 
-        if click_at_image(screen_number_field, timeout=5, confidence=0.5, logger=logger):
-            logger.info("✅ 화면번호 입력창 클릭 성공")
-            print("✅ 화면번호 입력창 클릭 성공")
-            time.sleep(1)  # 클릭 후 충분히 대기
+        # 이미지의 화면상 위치 찾기 (클릭은 하지 않고 위치만 반환)
+        # confidence=0.9로 설정하여 아주 정확할 때만 위치를 가져옵니다.
+        field_location = pyautogui.locateOnScreen(screen_number_field, confidence=0.9)
 
-            # 기존 내용 지우기 (혹시 있을 수 있으니)
+        if field_location:
+            # 이미지의 크기 가져오기
+            width, height = field_location.width, field_location.height
+            left, top = field_location.left, field_location.top
+
+            # 요청하신 클릭 지점 계산:
+            # 가로 4등분 중 1번째 중앙 = 가로의 1/8 지점
+            # 세로 2등분 중 2번째 중앙 = 세로의 3/4 지점
+            click_x = left + (width * 0.125)
+            click_y = top + (height * 0.75)
+
+            # 계산된 지점 클릭
+            pyautogui.click(click_x, click_y)
+            logger.info(f"✅ 입력창 특정 지점 클릭 성공: ({click_x}, {click_y})")
+            print(f"✅ 입력창 특정 지점 클릭 성공 (좌표: {int(click_x)}, {int(click_y)})")
+
+            time.sleep(1)
+
+            # 기존 내용 지우기 및 입력
             pyautogui.hotkey('ctrl', 'a')
-            time.sleep(0.2)
-
-            # 0191 입력 - pyperclip 사용 (더 안정적)
-            pyperclip.copy("0191")
             time.sleep(0.3)
+            pyautogui.press('backspace')
+            time.sleep(0.3)
+
+            pyperclip.copy("0191")
             pyautogui.hotkey('ctrl', 'v')
-            logger.info("0191 붙여넣기 완료")
-            print("✅ 0191 붙여넣기 완료")
             time.sleep(0.5)
-
-            # Enter 누르기
             pyautogui.press('enter')
-            logger.info("Enter 키 입력 완료")
-            print("✅ Enter 키 입력 완료")
+            logger.info("0191 입력 및 엔터 완료")
+            print("✅ 0191 입력 완료")
 
-            time.sleep(3)  # 화면 전환 대기
+            time.sleep(5) # 화면 로딩 대기
         else:
-            logger.error("❌ 화면번호 입력창을 찾지 못했습니다!")
-            print("❌ [8단계 실패] 화면번호 입력창을 찾지 못했습니다!")
-            save_error_screenshot("KB_화면번호입력창찾기실패")
+            logger.error("❌ 화면번호 입력창 이미지를 찾지 못했습니다! (Confidence 0.9)")
+            print("❌ [8단계 실패] 입력창 이미지를 찾지 못했습니다. (이미지 재캡처 필요)")
+            save_error_screenshot("KB_입력창인식실패")
             return False
 
         # 9단계: 전체받기 버튼 클릭
