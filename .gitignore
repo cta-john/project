@@ -31,3 +31,6 @@ Thumbs.db
 # 임시 파일
 *.tmp
 *.bak
+test_kb4.py
+# 임시 폴더
+Drafts/
