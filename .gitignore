@@ -1,5 +1,5 @@
 # 계정 정보 (보안)
-config/hts_info.json
+config/hts_config.json
 
 # 로그 파일
 logs/
@@ -31,6 +31,6 @@ Thumbs.db
 # 임시 파일
 *.tmp
 *.bak
-test_kb4.py
+
 # 임시 폴더
 Drafts/
